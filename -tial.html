@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+
+<!-- ⭐ 关键：手机自适应 -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 你的图标 -->
+    <link rel="apple-touch-icon" href="massage.png">
+
+    <!-- 推荐一起加 -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="My App">
+
+<title>English Practice</title>
+
+<style>
+
+body {
+    font-family: Arial;
+    background: #f5f5f5;
+    margin: 0;
+}
+
+/* ⭐ 主卡片（铺满屏幕） */
+.card {
+    background: #e0e0e0;
+    padding: 20px;
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+/* ⭐ 按钮（更适合手机） */
+button {
+    width: 100%;
+    padding: 16px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    color: white;
+    cursor: pointer;
+}
+
+/* 颜色 */
+.blue { background: #1976D2; }
+.green { background: #4CAF50; }
+.gray { background: #9E9E9E; }
+.orange { background: #FF9800; }
+.purple { background: #9C27B0; }
+
+.hidden { display: none; }
+
+#counter {
+    color: gray;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+/* 文本 */
+h3 {
+    margin: 10px 0;
+}
+
+.ex-cn {
+    color: #333;
+    font-size: 15px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+    <div id="counter"></div>
+
+    <h3 id="cn"></h3>
+    <h3 id="pron" class="hidden"></h3>
+    <h3 id="col" class="hidden"></h3>
+
+    <h3 id="ex-en" class="hidden"></h3>
+    <div id="ex-cn" class="hidden ex-cn"></div>
+
+    <button class="blue" onclick="showCN()">汉语和音标</button>
+    <button class="green" onclick="speakWord()">英文发音</button>
+    <button class="green" onclick="showCol()">搭配</button>
+    <button class="green" onclick="speakCol()">搭配发音</button>
+    <button class="blue" onclick="showExample()">例句</button>
+    <button class="green" onclick="speakExample()">例句发音</button>
+
+    <button class="purple" onclick="autoPlayEN()">自动循环播放（英文）</button>
+    <button class="purple" onclick="autoPlayCNEN()">自动循环播放（中英文）</button>
+
+    <button class="gray" onclick="next()">下一句</button>
+    <button class="orange" onclick="random()">随机一句</button>
+
+</div>
+
+<script>
+
+const data = [
+{
+cn:"初始的 / 第一版的",
+en:"initial",
+pron:"/ɪˈnɪʃəl/",
+col_en:"initial plan",
+col_cn:"初版方案",
+ex_en:"This is the initial plan, and we will confirm the details later.",
+ex_cn:"这是初版方案，我们之后会确认细节。"
+},
+{
+cn:"潜在的",
+en:"potential",
+pron:"/pəˈtenʃəl/",
+col_en:"potential issue",
+col_cn:"潜在问题",
+ex_en:"This could cause a potential issue if we don’t take action.",
+ex_cn:"如果我们不采取措施，这可能会造成潜在问题。"
+},
+{
+cn:"财务的",
+en:"financial",
+pron:"/faɪˈnænʃəl/",
+col_en:"financial impact",
+col_cn:"财务影响",
+ex_en:"We need to check the financial impact before we take action.",
+ex_cn:"在采取措施之前，我们需要确认财务影响。"
+},
+{
+cn:"工业的",
+en:"industrial",
+pron:"/ɪnˈdʌstriəl/",
+col_en:"industrial machine",
+col_cn:"工业设备",
+ex_en:"This industrial machine is working under normal conditions.",
+ex_cn:"这台工业设备在正常条件下运行。"
+},
+{
+cn:"特别的",
+en:"special",
+pron:"/ˈspeʃəl/",
+col_en:"special case",
+col_cn:"特殊情况",
+ex_en:"This is a special case, so we need to deal with it carefully.",
+ex_cn:"这是一个特殊情况，所以我们需要谨慎处理。"
+},
+{
+cn:"官方的",
+en:"official",
+pron:"/əˈfɪʃəl/",
+col_en:"official document",
+col_cn:"官方文件",
+ex_en:"Please check the official document before the meeting.",
+ex_cn:"请在会议前确认官方文件。"
+},
+{
+cn:"部分的",
+en:"partial",
+pron:"/ˈpɑːrʃəl/",
+col_en:"partial solution",
+col_cn:"部分解决方案",
+ex_en:"This is only a partial solution, and we still need to take action.",
+ex_cn:"这只是一个部分解决方案，我们仍然需要采取措施。"
+},
+{
+cn:"机密的",
+en:"confidential",
+pron:"/ˌkɒnfɪˈdenʃəl/",
+col_en:"confidential information",
+col_cn:"机密信息",
+ex_en:"This is confidential information, so please do not share it.",
+ex_cn:"这是机密信息，请不要分享。"
+},
+{
+cn:"住宅的",
+en:"residential",
+pron:"/ˌrezɪˈdenʃəl/",
+col_en:"residential area",
+col_cn:"住宅区",
+ex_en:"This is a residential area, so we need to reduce the noise.",
+ex_cn:"这是住宅区，所以我们需要减少噪音。"
+}
+];
+
+let index = 0;
+let playing = false;
+
+function update(){
+    document.getElementById("cn").innerText = data[index].cn;
+    document.getElementById("pron").innerText = data[index].pron;
+    document.getElementById("col").innerText = data[index].col_en + "（" + data[index].col_cn + "）";
+
+    document.getElementById("ex-en").innerText = data[index].ex_en;
+    document.getElementById("ex-cn").innerText = data[index].ex_cn;
+
+    document.getElementById("pron").classList.add("hidden");
+    document.getElementById("col").classList.add("hidden");
+    document.getElementById("ex-en").classList.add("hidden");
+    document.getElementById("ex-cn").classList.add("hidden");
+
+    document.getElementById("counter").innerText = (index + 1) + " / " + data.length;
+}
+
+function showCN(){
+    document.getElementById("pron").classList.remove("hidden");
+}
+
+function showCol(){
+    document.getElementById("col").classList.remove("hidden");
+}
+
+function showExample(){
+    document.getElementById("ex-en").classList.remove("hidden");
+    document.getElementById("ex-cn").classList.remove("hidden");
+}
+
+function speak(text, lang="en-US"){
+    return new Promise(resolve=>{
+        const utter = new SpeechSynthesisUtterance(text);
+        utter.lang = lang;
+        utter.rate = 0.9;
+        utter.onend = resolve;
+        speechSynthesis.speak(utter);
+    });
+}
+
+function speakWord(){
+    speak(data[index].en);
+}
+
+function speakCol(){
+    speak(data[index].col_en);
+}
+
+function speakExample(){
+    speak(data[index].ex_en);
+}
+
+async function autoPlayEN(){
+    playing = true;
+    while(playing){
+        await speak(data[index].en);
+        await speak(data[index].col_en);
+    }
+}
+
+async function autoPlayCNEN(){
+    playing = true;
+    while(playing){
+        await speak(data[index].cn, "zh-CN");
+        await speak(data[index].en);
+        await speak(data[index].col_cn, "zh-CN");
+        await speak(data[index].col_en);
+    }
+}
+
+function next(){
+    playing = false;
+    index++;
+    if(index >= data.length) index = 0;
+    update();
+}
+
+function random(){
+    playing = false;
+    index = Math.floor(Math.random() * data.length);
+    update();
+}
+
+update();
+
+</script>
+
+</body>
+</html>

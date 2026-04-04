@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ken英语脱口训练器</title>
+
+<link rel="apple-touch-icon" href="icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+<style>
+body {
+    font-family: -apple-system;
+    background: #f2f4f7;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 420px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+.progress {
+    text-align: center;
+    font-size: 0.9rem;
+    color: gray;
+    margin-bottom: 10px;
+}
+.cn {
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+}
+.en {
+    font-size: 1.2rem;
+    color: #007AFF;
+    display: none;
+    margin-bottom: 15px;
+}
+button {
+    width: 100%;
+    padding: 14px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: bold;
+}
+.show { background: #007AFF; color: white; }
+.speak { background: #34C759; color: white; }
+.next { background: #888; color: white; }
+.prev { background: #bbb; color: white; }
+.random { background: #ff9500; color: white; }
+</style>
+</head>
+
+<body>
+
+<div class="card">
+    <div class="progress" id="progress"></div>
+    <div class="cn" id="cn"></div>
+    <div class="en" id="en"></div>
+
+    <button class="show" onclick="showAnswer()">显示英文</button>
+    <button class="speak" onclick="speak()">听发音</button>
+
+    <button class="prev" onclick="prev()">上一句</button>
+    <button class="next" onclick="next()">下一句</button>
+    <button class="random" onclick="random()">随机一句</button>
+</div>
+
+<script>
+const data = [
+{cn:"我通常喝咖啡，尤其是在早上。",en:"I tend to drink coffee, especially in the morning."},
+{cn:"然后我出门去上班。除了星期天，路上总是很堵。",en:"Then I head out to work. All the streets are always full of traffic except on Sunday."},
+{cn:"每天晚上都会积累很多问题。",en:"Many issues pile up every evening."},
+{cn:"我到办公室后，立刻让同事确认当前的问题，并在必要时采取临时措施。",en:"When I got to my office, I asked my coworkers to check the current issue immediately and take temporary action if necessary."},
+{cn:"我觉得这个问题可能是由静电引起的。这也正是粉末容易粘在机器表面的原因。",en:"I think the issue could be caused by static electricity. This is exactly why the powder tends to stick to the machine surface."},
+{cn:"目前，我们正面临一些困难。如果不采取适当措施，我觉得这最终可能会导致严重问题。",en:"Currently, we are facing some difficulties. If we don't take proper action, I think it could eventually cause serious issues."},
+{cn:"但是他们告诉我，从昨晚开始他们一直在连续开会，所以没能及时回应。",en:"But they told me they had been in back-to-back meetings since last night, so they couldn’t respond properly."},
+{cn:"所以我先准备了一份初步草稿来总结情况。",en:"So I prepared the initial draft to summarize the situation."},
+{cn:"所以我决定自己处理，并确认一切是否运转正常。",en:"So I decided to deal with it myself and check if everything was working properly."},
+{cn:"稍后我们会召开内部会议来确认细节。",en:"We will have an internal meeting to confirm the details later."},
+{cn:"之后，我向经理汇报了情况。目前，一切都在控制之中。",en:"After that, I updated my manager on the situation. Currently, everything is under control."},
+{cn:"另外，我也已经和现场工作人员确认了问题发生的准确时间。",en:"In addition, I have also confirmed the exact time of the issue with the workers on site."}
+];
+
+let index = 0;
+
+function update() {
+    document.getElementById("cn").innerText = data[index].cn;
+    document.getElementById("en").style.display = "none";
+    document.getElementById("progress").innerText = (index+1) + " / " + data.length;
+}
+
+function showAnswer() {
+    document.getElementById("en").innerText = data[index].en;
+    document.getElementById("en").style.display = "block";
+}
+
+function speak() {
+    let msg = new SpeechSynthesisUtterance(data[index].en);
+    msg.lang = "en-US";
+    msg.rate = 0.9;
+    speechSynthesis.speak(msg);
+}
+
+function next() {
+    index = (index + 1) % data.length;
+    update();
+}
+
+function prev() {
+    index = (index - 1 + data.length) % data.length;
+    update();
+}
+
+function random() {
+    index = Math.floor(Math.random() * data.length);
+    update();
+}
+
+update();
+</script>
+
+</body>
+</html>

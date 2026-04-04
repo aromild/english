@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+
+<!-- ⭐ 关键：手机自适应 -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- 你的图标 -->
+<link rel="apple-touch-icon" href="golf-ball.png">
+
+<!-- 推荐一起加 -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="My App">
+
+<title>Word App</title>
+
+<style>
+body {
+    font-family: Arial;
+    margin: 0;
+    background: #f2f2f2;
+    text-align: center;
+}
+
+.container {
+    padding: 40px 20px;
+    max-width: 400px;
+    margin: auto;
+}
+
+.chinese {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.display {
+    font-size: 18px;
+    margin: 20px 0;
+    min-height: 40px;
+}
+
+.buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+button {
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    background: #007AFF;
+    color: white;
+    font-size: 14px;
+    width: 100%;
+}
+
+.next-btn {
+    margin-top: 20px;
+    width: 100%;
+    background: #ff9500;
+}
+</style>
+
+<script>
+let index = 0;
+
+const words = [
+{
+en:"accept",
+phon:"/əkˈsept/",
+cn:"接受",
+exp:"accept something（接受某事）",
+sen:"I can accept this result.（我可以接受这个结果。）"
+},
+{
+en:"except",
+phon:"/ɪkˈsept/",
+cn:"除了",
+exp:"except + noun（除了…）",
+sen:"Everyone joined except him.（除了他大家都参加了。）"
+},
+{
+en:"expect",
+phon:"/ɪkˈspekt/",
+cn:"预期",
+exp:"expect to do（预计做…）",
+sen:"We expect to finish today.（我们预计今天完成。）"
+},
+{
+en:"consider",
+phon:"/kənˈsɪdər/",
+cn:"看作 / 认为",
+exp:"consider A as B（把A看作B）",
+sen:"We consider this as one unit.（我们把它看作一个整体。）"
+},
+{
+en:"convince",
+phon:"/kənˈvɪns/",
+cn:"说服",
+exp:"convince someone to do（说服某人做…）",
+sen:"I need to convince management.（我需要说服管理层。）"
+},
+{
+en:"flammable",
+phon:"/ˈflæməbl/",
+cn:"易燃的",
+exp:"flammable material（易燃材料）",
+sen:"This is flammable material.（这是易燃物。）"
+}
+];
+
+function showWord(){
+    document.getElementById("cn").innerText = words[index].cn;
+    document.getElementById("display").innerText = "";
+}
+
+function showEN(){
+    let w = words[index];
+    document.getElementById("display").innerText = w.en + " " + w.phon;
+}
+
+function showExp(){
+    document.getElementById("display").innerText = words[index].exp;
+}
+
+function showSen(){
+    document.getElementById("display").innerText = words[index].sen;
+}
+
+function speak(text){
+    let msg = new SpeechSynthesisUtterance(text);
+    msg.lang = "en-US";
+    speechSynthesis.speak(msg);
+}
+
+function nextWord(){
+    index = (index + 1) % words.length;
+    showWord();
+}
+</script>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div id="cn" class="chinese"></div>
+
+<div id="display" class="display"></div>
+
+<div class="buttons">
+<button onclick="showEN()">英文+音标</button>
+<button onclick="speak(words[index].en)">🔊</button>
+
+<button onclick="showExp()">常用表现</button>
+<button onclick="speak(words[index].exp)">🔊</button>
+
+<button onclick="showSen()">例句</button>
+<button onclick="speak(words[index].sen)">🔊</button>
+</div>
+
+<button class="next-btn" onclick="nextWord()">➡ 下一个单词</button>
+
+</div>
+
+<!-- ⭐ 强制初始化 -->
+<script>
+showWord();
+</script>
+
+</body>
+</html>

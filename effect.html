@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="apple-touch-icon" href="icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Effect Family">
+<title>Effect Family</title>
+<style>
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    margin:0; padding:0; background:#f5f7fb; color:#1f2937;
+  }
+  .wrap{max-width:760px; margin:0 auto; padding:16px;}
+  .card{
+    background:#fff; border-radius:18px; padding:20px; box-shadow:0 8px 24px rgba(0,0,0,.08);
+    margin-top:12px;
+  }
+  .topbar{
+    display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;
+    margin-bottom:10px;
+  }
+  .counter{font-size:14px; color:#6b7280;}
+  .cn{
+    font-size:32px; font-weight:700; text-align:center; margin:18px 0 10px;
+    line-height:1.3;
+  }
+  .en{
+    font-size:24px; font-weight:700; text-align:center; margin-top:8px;
+  }
+  .ipa,.pos{
+    text-align:center; color:#4b5563; font-size:18px; margin-top:6px;
+  }
+  .section-title{
+    font-size:16px; font-weight:700; margin:18px 0 8px; color:#111827;
+  }
+  .line{
+    font-size:18px; line-height:1.7; margin:8px 0; padding:10px 12px;
+    background:#f9fafb; border-radius:12px;
+  }
+  .buttons, .small-buttons{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:14px;
+  }
+  .small-buttons{grid-template-columns:repeat(2,1fr);}
+  button{
+    border:none; border-radius:12px; padding:12px 10px; font-size:16px; font-weight:600;
+    background:#e5e7eb; color:#111827;
+  }
+  .nav button{background:#dbeafe;}
+  .speak button{background:#dcfce7;}
+  .toggle button{background:#fef3c7;}
+  .footer{
+    text-align:center; color:#6b7280; font-size:13px; margin:16px 0 8px;
+  }
+  .hidden{display:none;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <div class="topbar">
+      <div class="counter" id="counter">1 / 6</div>
+      <div class="counter">Effect 词族复习卡</div>
+    </div>
+
+    <div class="cn" id="cn"></div>
+
+    <div id="detailArea">
+      <div class="en" id="en"></div>
+      <div class="ipa" id="ipa"></div>
+      <div class="pos" id="pos"></div>
+
+      <div class="section-title">常见搭配</div>
+      <div class="line" id="collocation"></div>
+
+      <div class="section-title">例句</div>
+      <div class="line" id="example"></div>
+    </div>
+
+    <div class="buttons nav">
+      <button onclick="prevCard()">上一个</button>
+      <button onclick="randomCard()">随机</button>
+      <button onclick="nextCard()">下一个</button>
+    </div>
+
+    <div class="buttons speak">
+      <button onclick="speakWord()">🔊 单词</button>
+      <button onclick="speakCollocation()">🔊 搭配</button>
+      <button onclick="speakExample()">🔊 例句</button>
+    </div>
+
+    <div class="small-buttons toggle">
+      <button onclick="toggleDetails()">显示/隐藏英文</button>
+      <button onclick="shuffleAll()">打乱顺序</button>
+    </div>
+  </div>
+
+  <div class="footer">手机上可直接打开使用</div>
+</div>
+
+<script>
+const cards = [
+  {
+    cn: "效果 / 影响 / 结果",
+    en: "effect",
+    ipa: "/ɪˈfekt/",
+    pos: "词性：名词 noun",
+    collocation: "have an effect on（对…有影响） / side effect（副作用） / positive effect（正面影响） / negative effect（负面影响）",
+    example: "This change has an effect on production.（这个变化对生产有影响。）"
+  },
+  {
+    cn: "有效的",
+    en: "effective",
+    ipa: "/ɪˈfektɪv/",
+    pos: "词性：形容词 adjective",
+    collocation: "highly effective（非常有效） / very effective（很有效） / effective solution（有效方案） / cost-effective（性价比高）",
+    example: "This solution is highly effective.（这个方案非常有效。）"
+  },
+  {
+    cn: "有效地 / 实际上",
+    en: "effectively",
+    ipa: "/ɪˈfektɪvli/",
+    pos: "词性：副词 adverb",
+    collocation: "work effectively（有效工作） / communicate effectively（有效沟通） / manage effectively（有效管理）",
+    example: "We need to communicate effectively.（我们需要有效沟通。）"
+  },
+  {
+    cn: "影响",
+    en: "affect",
+    ipa: "/əˈfekt/",
+    pos: "词性：动词 verb",
+    collocation: "affect production（影响生产） / affect performance（影响性能） / be affected by（受到…影响）",
+    example: "This issue affects production.（这个问题影响生产。）"
+  },
+  {
+    cn: "有效性",
+    en: "effectiveness",
+    ipa: "/ɪˈfektɪvnəs/",
+    pos: "词性：名词 noun",
+    collocation: "improve effectiveness（提高有效性） / measure effectiveness（评估效果）",
+    example: "We need to improve the effectiveness.（我们需要提高有效性。）"
+  },
+  {
+    cn: "生效 / 开始起作用",
+    en: "take effect",
+    ipa: "/teɪk ɪˈfekt/",
+    pos: "词性：固定表达 phrase",
+    collocation: "take effect immediately（立即生效） / take effect next month（下个月生效）",
+    example: "The new rule will take effect next month.（新规定下个月生效。）"
+  }
+];
+
+let current = 0;
+let detailVisible = true;
+
+function render(){
+  const c = cards[current];
+  document.getElementById("counter").innerText = `${current + 1} / ${cards.length}`;
+  document.getElementById("cn").innerText = c.cn;
+  document.getElementById("en").innerText = c.en;
+  document.getElementById("ipa").innerText = c.ipa;
+  document.getElementById("pos").innerText = c.pos;
+  document.getElementById("collocation").innerText = c.collocation;
+  document.getElementById("example").innerText = c.example;
+  document.getElementById("detailArea").classList.toggle("hidden", !detailVisible);
+}
+
+function nextCard(){
+  current = (current + 1) % cards.length;
+  render();
+}
+function prevCard(){
+  current = (current - 1 + cards.length) % cards.length;
+  render();
+}
+function randomCard(){
+  let n = current;
+  while(n === current && cards.length > 1){
+    n = Math.floor(Math.random() * cards.length);
+  }
+  current = n;
+  render();
+}
+function shuffleAll(){
+  for(let i = cards.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [cards[i], cards[j]] = [cards[j], cards[i]];
+  }
+  current = 0;
+  render();
+}
+function toggleDetails(){
+  detailVisible = !detailVisible;
+  render();
+}
+function speak(text){
+  if(!window.speechSynthesis) return;
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = "en-US";
+  u.rate = 0.9;
+  speechSynthesis.cancel();
+  speechSynthesis.speak(u);
+}
+function speakWord(){
+  speak(cards[current].en);
+}
+function speakCollocation(){
+  speak(cards[current].collocation.replace(/（.*?）/g, ""));
+}
+function speakExample(){
+  speak(cards[current].example.replace(/（.*?）/g, ""));
+}
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!-- ⭐ 关键：手机自适应 -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 你的图标 -->
+    <link rel="apple-touch-icon" href="fuji.png">
+
+    <!-- 推荐一起加 -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="My App">
+
+<title>Adverb Practice</title>
+
+<style>
+body {
+    font-family: Arial;
+    background: #f5f5f5;
+    margin: 0;
+}
+.card {
+    background: #e0e0e0;
+    padding: 20px;
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+button {
+    width: 100%;
+    padding: 16px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    color: white;
+}
+.blue { background: #1976D2; }
+.green { background: #4CAF50; }
+.gray { background: #9E9E9E; }
+.orange { background: #FF9800; }
+.purple { background: #9C27B0; }
+
+.hidden { display: none; }
+
+#counter { text-align: center; color: gray; }
+
+.ex-cn { font-size: 15px; color: #333; }
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+<div id="counter"></div>
+
+<h3 id="cn"></h3>
+<h3 id="enpron" class="hidden"></h3>
+<h3 id="col" class="hidden"></h3>
+
+<h3 id="ex-en" class="hidden"></h3>
+<div id="ex-cn" class="hidden ex-cn"></div>
+
+<button class="blue" onclick="showENPron()">英文和音标</button>
+<button class="green" onclick="speakWord()">英文发音</button>
+<button class="green" onclick="showCol()">搭配</button>
+<button class="green" onclick="speakCol()">搭配发音</button>
+<button class="blue" onclick="showExample()">例句</button>
+<button class="green" onclick="speakExample()">例句发音</button>
+
+<button class="purple" onclick="autoPlayEN()">自动循环（英文）</button>
+<button class="purple" onclick="autoPlayCNEN()">自动循环（中英）</button>
+
+<button class="gray" onclick="next()">下一句</button>
+<button class="orange" onclick="random()">随机</button>
+
+</div>
+
+<script>
+
+const data = [
+
+{cn:"其实 / 实际上",en:"actually",pron:"/ˈækʧuəli/",col_en:"actually speaking",col_cn:"其实来说",ex_en:"Actually, we still need to check this issue.",ex_cn:"其实，我们还需要确认这个问题。"},
+{cn:"基本上",en:"basically",pron:"/ˈbeɪsɪkli/",col_en:"basically done",col_cn:"基本完成",ex_en:"The work is basically done.",ex_cn:"工作基本完成了。"}
+
+];
+
+let index = 0;
+let playing = false;
+
+function update(){
+    document.getElementById("cn").innerText = data[index].cn;
+    document.getElementById("enpron").innerText = data[index].en + " " + data[index].pron;
+
+    document.getElementById("col").innerText = data[index].col_en + "（" + data[index].col_cn + "）";
+    document.getElementById("ex-en").innerText = data[index].ex_en;
+    document.getElementById("ex-cn").innerText = data[index].ex_cn;
+
+    document.getElementById("enpron").classList.add("hidden");
+    document.getElementById("col").classList.add("hidden");
+    document.getElementById("ex-en").classList.add("hidden");
+    document.getElementById("ex-cn").classList.add("hidden");
+
+    document.getElementById("counter").innerText = (index + 1) + " / " + data.length;
+}
+
+function showENPron(){
+    document.getElementById("enpron").classList.remove("hidden");
+}
+
+function showCol(){document.getElementById("col").classList.remove("hidden");}
+
+function showExample(){
+    document.getElementById("ex-en").classList.remove("hidden");
+    document.getElementById("ex-cn").classList.remove("hidden");
+}
+
+function speak(text, lang="en-US"){
+    return new Promise(resolve=>{
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = lang;
+        u.rate = 0.9;
+        u.onend = resolve;
+        speechSynthesis.speak(u);
+    });
+}
+
+function speakWord(){speak(data[index].en);}
+function speakCol(){speak(data[index].col_en);}
+function speakExample(){speak(data[index].ex_en);}
+
+async function autoPlayEN(){
+    playing = true;
+    while(playing){
+        await speak(data[index].en);
+        await speak(data[index].col_en);
+    }
+}
+
+async function autoPlayCNEN(){
+    playing = true;
+    while(playing){
+        await speak(data[index].cn,"zh-CN");
+        await speak(data[index].en);
+    }
+}
+
+function next(){
+    playing = false;
+    index = (index + 1) % data.length;
+    update();
+}
+
+function random(){
+    playing = false;
+    index = Math.floor(Math.random() * data.length);
+    update();
+}
+
+update();
+
+</script>
+
+</body>
+</html>

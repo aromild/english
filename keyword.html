@@ -1,0 +1,209 @@
+
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<!-- ⭐ 关键：手机自适应 -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 你的图标 -->
+    <link rel="apple-touch-icon" href="birdie.png">
+
+    <!-- 推荐一起加 -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="My App">
+
+<title>Keyword Trainer</title>
+
+<style>
+body {
+    font-family: Arial;
+    background: #f5f5f5;
+    text-align: center;
+    padding: 15px;
+}
+
+.card {
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.cn {
+    font-size: 22px;
+    color: #666;
+}
+
+.en {
+    font-size: 28px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.ph {
+    color: #888;
+}
+
+.sub {
+    margin-top: 10px;
+    font-size: 18px;
+    color: #007BFF;
+}
+
+.subcn {
+    font-size: 15px;
+    color: #555;
+}
+
+/* 按钮布局（关键） */
+.btn-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+/* 按钮颜色 */
+.btn {
+    padding: 12px;
+    border-radius: 10px;
+    color: white;
+    font-size: 15px;
+    border: none;
+}
+
+.blue { background: #2b74c0; }
+.green { background: #4CAF50; }
+.purple { background: #9C27B0; }
+.orange { background: #FF9800; }
+.gray { background: #888; }
+
+.full {
+    grid-column: span 2;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+    <div class="cn" id="cn"></div>
+    <div class="en" id="en"></div>
+    <div class="ph" id="ph"></div>
+    <div class="sub" id="sub"></div>
+    <div class="subcn" id="subcn"></div>
+</div>
+
+<div class="btn-grid">
+
+<button class="btn blue full" onclick="showEnglish()">汉语和音标</button>
+
+<button class="btn green" onclick="speakWord()">英文发音</button>
+<button class="btn green" onclick="showCollocation()">搭配</button>
+
+<button class="btn green" onclick="speakCollocation()">搭配发音</button>
+<button class="btn blue" onclick="showExample()">例句</button>
+
+<button class="btn green" onclick="speakExample()">例句发音</button>
+
+<button class="btn purple full" onclick="autoPlayEn()">自动循环播放（英文）</button>
+<button class="btn purple full" onclick="autoPlayAll()">自动循环播放（中英文）</button>
+
+<button class="btn gray full" onclick="next()">下一句</button>
+<button class="btn orange full" onclick="random()">随机一句</button>
+
+</div>
+
+<script>
+const data = [
+{cn:"确认", en:"confirm", ph:"/kənˈfɜːrm/", col:"confirm it again", colcn:"再次确认", ex:"Would it be possible to confirm it again?", excn:"可以再确认一下吗？"},
+{cn:"调整", en:"adjust", ph:"/əˈdʒʌst/", col:"adjust the schedule", colcn:"调整日程", ex:"Would it be possible to adjust the schedule?", excn:"可以调整一下日程吗？"},
+{cn:"估算", en:"estimate", ph:"/ˈestɪmət/", col:"a rough estimate", colcn:"粗略估算", ex:"A rough estimate is okay.", excn:"粗略估算可以。"},
+{cn:"处理", en:"deal with", ph:"/", col:"deal with a problem", colcn:"处理问题", ex:"We need to deal with this issue.", excn:"需要处理这个问题。"},
+{cn:"根本原因", en:"root cause", ph:"/", col:"identify the root cause", colcn:"找根因", ex:"Identify the root cause.", excn:"找出根本原因。"},
+{cn:"效率", en:"efficiency", ph:"/ɪˈfɪʃənsi/", col:"improve efficiency", colcn:"提高效率", ex:"It will improve efficiency.", excn:"可以提高效率。"},
+{cn:"耗材", en:"consumables", ph:"/kənˈsuːməbəlz/", col:"apart from consumables", colcn:"除耗材外", ex:"Apart from consumables.", excn:"除了耗材。"},
+{cn:"维护", en:"maintenance", ph:"/ˈmeɪntənəns/", col:"for maintenance", colcn:"用于维护", ex:"Leave space for maintenance.", excn:"预留维护空间。"},
+{cn:"数据", en:"data", ph:"/ˈdeɪtə/", col:"collect data", colcn:"收集数据", ex:"Collect all the data first.", excn:"先收集数据。"},
+{cn:"议程", en:"agenda", ph:"/əˈdʒendə/", col:"today's agenda", colcn:"今日议程", ex:"Let us now make today's agenda.", excn:"确认今天议程。"}
+];
+
+let index = 0;
+let timer = null;
+
+function update() {
+    document.getElementById("cn").innerText = data[index].cn;
+    document.getElementById("en").innerText = "";
+    document.getElementById("ph").innerText = "";
+    document.getElementById("sub").innerText = "";
+    document.getElementById("subcn").innerText = "";
+}
+
+function showEnglish() {
+    document.getElementById("en").innerText = data[index].en;
+    document.getElementById("ph").innerText = data[index].ph;
+}
+
+function showCollocation() {
+    document.getElementById("sub").innerText = data[index].col;
+    document.getElementById("subcn").innerText = data[index].colcn;
+}
+
+function showExample() {
+    document.getElementById("sub").innerText = data[index].ex;
+    document.getElementById("subcn").innerText = data[index].excn;
+}
+
+function speak(text) {
+    let msg = new SpeechSynthesisUtterance(text);
+    msg.lang = "en-US";
+    speechSynthesis.speak(msg);
+}
+
+function speakWord() {
+    speak(data[index].en);
+}
+
+function speakCollocation() {
+    speak(data[index].col);
+}
+
+function speakExample() {
+    speak(data[index].ex);
+}
+
+function next() {
+    index = (index + 1) % data.length;
+    update();
+}
+
+function random() {
+    index = Math.floor(Math.random() * data.length);
+    update();
+}
+
+function autoPlayEn() {
+    clearInterval(timer);
+    timer = setInterval(() => {
+        speak(data[index].en);
+        index = (index + 1) % data.length;
+        update();
+    }, 3000);
+}
+
+function autoPlayAll() {
+    clearInterval(timer);
+    timer = setInterval(() => {
+        speak(data[index].cn);
+        setTimeout(() => speak(data[index].en), 1500);
+        index = (index + 1) % data.length;
+        update();
+    }, 4000);
+}
+
+update();
+</script>
+
+</body>
+</html>
+

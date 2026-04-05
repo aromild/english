@@ -68,6 +68,11 @@ button {
     width: 100%;
     background: #ff9500;
 }
+
+/* ⭐ MP3按钮样式 */
+.mp3-btn {
+    margin-top: 15px;
+}
 </style>
 
 <script>
@@ -118,7 +123,7 @@ function show(){
     document.getElementById("page").innerText = (index+1)+" / "+data.length;
 }
 
-// 显示英文（单词）
+// 显示英文
 function showEN(){
     document.getElementById("display").innerText = data[index].en;
 }
@@ -142,7 +147,7 @@ function speakSen(){
     speechSynthesis.speak(msg);
 }
 
-// ⭐ 全文（显示完整句子）
+// 全文显示
 function showAll(){
     let text = "";
     data.forEach(item=>{
@@ -151,7 +156,7 @@ function showAll(){
     document.getElementById("display").innerText = text;
 }
 
-// ⭐ 全文朗读（完整句子）
+// 全文朗读
 function speakAll(){
     let i = 0;
 
@@ -170,6 +175,11 @@ function speakAll(){
     }
 
     speakNext();
+}
+
+// ⭐ 播放MP3
+function playMP3(){
+    document.getElementById("player").play();
 }
 
 // 下一个
@@ -203,6 +213,16 @@ function next(){
 <button onclick="showAll()">全文</button>
 <button onclick="speakAll()">🔊</button>
 </div>
+
+<!-- ⭐ MP3播放按钮 -->
+<div class="mp3-btn">
+<button onclick="playMP3()">▶ 播放MP3</button>
+</div>
+
+<!-- ⭐ MP3播放器 -->
+<audio id="player">
+    <source src="connector_however.mp3" type="audio/mpeg">
+</audio>
 
 <button class="next-btn" onclick="next()">➡ 下一个</button>
 

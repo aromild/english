@@ -36,8 +36,9 @@ body {
 .display {
     font-size: 18px;
     margin: 20px 0;
-    min-height: 100px;
+    min-height: 120px;
     white-space: pre-line;
+    line-height: 1.6;
 }
 
 .buttons {
@@ -69,7 +70,6 @@ button {
     background: #ff9500;
 }
 
-/* ⭐ MP3按钮样式 */
 .mp3-btn {
     margin-top: 15px;
 }
@@ -77,70 +77,31 @@ button {
 
 <script>
 let index = 0;
+let timer = null;
 
 const data = [
-{
-cn:"突然",
-en:"suddenly（机器突然停止了。）",
-sen:"The machine stopped suddenly."
-},
-{
-cn:"这就是为什么",
-en:"That’s why（这就是为什么生产延误。）",
-sen:"That’s why production was delayed."
-},
-{
-cn:"然后",
-en:"and then（我们检查系统，然后重新启动。）",
-sen:"We checked the system, and then restarted it."
-},
-{
-cn:"到目前为止",
-en:"So far（到目前为止一切正常。）",
-sen:"So far, everything looks good."
-},
-{
-cn:"但是",
-en:"However（但是我们还需要监控。）",
-sen:"However, we still need to monitor it."
-},
-{
-cn:"此外",
-en:"In addition（此外，我们会采取预防措施。）",
-sen:"In addition, we will take preventive action."
-},
-{
-cn:"目前",
-en:"For now（目前一切都在控制中。）",
-sen:"For now, everything is under control."
-}
+{cn:"突然", sen:"The machine stopped suddenly."},
+{cn:"这就是为什么", sen:"That’s why production was delayed."},
+{cn:"然后", sen:"We checked the system, and then restarted it."},
+{cn:"到目前为止", sen:"So far, everything looks good."},
+{cn:"但是", sen:"However, we still need to monitor it."},
+{cn:"此外", sen:"In addition, we will take preventive action."},
+{cn:"目前", sen:"For now, everything is under control."}
 ];
 
-// 初始化显示
+// 初始化
 function show(){
     document.getElementById("cn").innerText = data[index].cn;
     document.getElementById("display").innerText = "";
     document.getElementById("page").innerText = (index+1)+" / "+data.length;
 }
 
-// 显示英文
-function showEN(){
-    document.getElementById("display").innerText = data[index].en;
-}
-
-// 显示例句
+// 显示句子
 function showSen(){
     document.getElementById("display").innerText = data[index].sen;
 }
 
-// 单词发音
-function speakEN(){
-    let msg = new SpeechSynthesisUtterance(data[index].en);
-    msg.lang = "en-US";
-    speechSynthesis.speak(msg);
-}
-
-// 句子发音
+// 单句发音
 function speakSen(){
     let msg = new SpeechSynthesisUtterance(data[index].sen);
     msg.lang = "en-US";
@@ -177,9 +138,35 @@ function speakAll(){
     speakNext();
 }
 
-// ⭐ 播放MP3
-function playMP3(){
-    document.getElementById("player").play();
+// ⭐ MP3 + 自动字幕
+function playMP3WithText(){
+    let audio = document.getElementById("player");
+
+    audio.currentTime = 0;
+    audio.play();
+
+    let i = 0;
+
+    if(timer){
+        clearInterval(timer);
+    }
+
+    timer = setInterval(()=>{
+        if(i >= data.length){
+            clearInterval(timer);
+            return;
+        }
+
+        document.getElementById("display").innerText = data[i].sen;
+
+        // ⭐ 自动滚动
+        document.getElementById("display").scrollIntoView({
+            behavior:"smooth",
+            block:"center"
+        });
+
+        i++;
+    }, 3000); // ⭐ 可以根据你的MP3调整
 }
 
 // 下一个
@@ -202,9 +189,6 @@ function next(){
 <div id="display" class="display"></div>
 
 <div class="buttons">
-<button onclick="showEN()">英文</button>
-<button onclick="speakEN()">🔊</button>
-
 <button onclick="showSen()">例句</button>
 <button onclick="speakSen()">🔊</button>
 </div>
@@ -214,12 +198,12 @@ function next(){
 <button onclick="speakAll()">🔊</button>
 </div>
 
-<!-- ⭐ MP3播放按钮 -->
+<!-- ⭐ MP3字幕按钮 -->
 <div class="mp3-btn">
-<button onclick="playMP3()">▶ 播放MP3</button>
+<button onclick="playMP3WithText()">▶ MP3 + 自动字幕</button>
 </div>
 
-<!-- ⭐ MP3播放器 -->
+<!-- ⭐ MP3 -->
 <audio id="player">
     <source src="connector_however.mp3" type="audio/mpeg">
 </audio>

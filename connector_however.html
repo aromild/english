@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="apple-touch-icon" href="icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Connector App">
+
+<title>Connector App</title>
+
+<style>
+body {
+    font-family: Arial;
+    margin: 0;
+    background: #f2f2f2;
+    text-align: center;
+}
+
+.container {
+    padding: 20px;
+    max-width: 400px;
+    margin: auto;
+}
+
+.page-indicator {
+    background: #d9d9d9;
+    padding: 6px 0;
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+.chinese {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.display {
+    font-size: 18px;
+    margin: 20px 0;
+    min-height: 80px;
+    white-space: pre-line;
+}
+
+.buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+button {
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    background: #007AFF;
+    color: white;
+    font-size: 14px;
+    width: 100%;
+}
+
+.full-buttons {
+    margin-top: 15px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.next-btn {
+    margin-top: 20px;
+    width: 100%;
+    background: #ff9500;
+}
+</style>
+
+<script>
+let index = 0;
+
+const data = [
+{
+cn:"突然",
+en:"The machine stopped suddenly.",
+sen:"The machine stopped suddenly.（机器突然停止了。）"
+},
+{
+cn:"这就是为什么",
+en:"That’s why production was delayed.",
+sen:"That’s why production was delayed.（这就是为什么生产延误。）"
+},
+{
+cn:"然后",
+en:"We checked the system, and then restarted it.",
+sen:"We checked the system, and then restarted it.（我们检查系统，然后重新启动。）"
+},
+{
+cn:"到目前为止",
+en:"So far, everything looks good.",
+sen:"So far, everything looks good.（到目前为止一切正常。）"
+},
+{
+cn:"但是",
+en:"However, we still need to monitor it.",
+sen:"However, we still need to monitor it.（但是我们还需要监控。）"
+},
+{
+cn:"此外",
+en:"In addition, we will take preventive action.",
+sen:"In addition, we will take preventive action.（此外，我们会采取预防措施。）"
+},
+{
+cn:"目前",
+en:"For now, everything is under control.",
+sen:"For now, everything is under control.（目前一切都在控制中。）"
+}
+];
+
+function show(){
+    document.getElementById("cn").innerText = data[index].cn;
+    document.getElementById("display").innerText = "";
+    document.getElementById("page").innerText = (index+1)+" / "+data.length;
+}
+
+function showEN(){
+    document.getElementById("display").innerText = data[index].en;
+}
+
+function showSen(){
+    document.getElementById("display").innerText = data[index].sen;
+}
+
+function speakEN(){
+    let msg = new SpeechSynthesisUtterance(data[index].en);
+    msg.lang = "en-US";
+    speechSynthesis.speak(msg);
+}
+
+function speakSen(){
+    let msg = new SpeechSynthesisUtterance(data[index].sen);
+    msg.lang = "en-US";
+    speechSynthesis.speak(msg);
+}
+
+// ⭐ 显示全文
+function showAll(){
+    let text = "";
+    data.forEach(item=>{
+        text += item.en + "\n";
+    });
+    document.getElementById("display").innerText = text;
+}
+
+// ⭐ 连续朗读
+function speakAll(){
+    let i = 0;
+
+    function speakNext(){
+        if(i >= data.length) return;
+
+        let msg = new SpeechSynthesisUtterance(data[i].en);
+        msg.lang = "en-US";
+
+        msg.onend = function(){
+            i++;
+            setTimeout(speakNext, 400); // ⭐ 停顿
+        };
+
+        speechSynthesis.speak(msg);
+    }
+
+    speakNext();
+}
+
+function next(){
+    index = (index + 1) % data.length;
+    show();
+}
+</script>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div id="page" class="page-indicator"></div>
+
+<div id="cn" class="chinese"></div>
+
+<div id="display" class="display"></div>
+
+<div class="buttons">
+<button onclick="showEN()">英文</button>
+<button onclick="speakEN()">🔊</button>
+
+<button onclick="showSen()">例句</button>
+<button onclick="speakSen()">🔊</button>
+</div>
+
+<!-- ⭐ 新增按钮 -->
+<div class="full-buttons">
+<button onclick="showAll()">全文</button>
+<button onclick="speakAll()">🔊 全文朗读</button>
+</div>
+
+<button class="next-btn" onclick="next()">➡ 下一个</button>
+
+</div>
+
+<script>
+show();
+</script>
+
+<!-- 返回按钮 -->
+<div style="position: fixed; bottom: 20px; width: 100%; text-align: center;">
+<a href="index.html">
+<button style="padding:12px 24px; border-radius:8px; background:#4CAF50; color:white;">
+⬅ Index
+</button>
+</a>
+</div>
+
+<!-- 版权 -->
+<div style="text-align:center; font-size:12px; color:#888; margin:20px 0;">
+© 2026 Ken. All rights reserved.
+</div>
+
+</body>
+</html>

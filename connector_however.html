@@ -4,10 +4,6 @@
 <meta charset="UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="apple-touch-icon" href="icon.png">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Connector App">
-
 <title>Connector App</title>
 
 <style>
@@ -40,7 +36,7 @@ body {
 .display {
     font-size: 18px;
     margin: 20px 0;
-    min-height: 80px;
+    min-height: 100px;
     white-space: pre-line;
 }
 
@@ -80,89 +76,94 @@ let index = 0;
 const data = [
 {
 cn:"突然",
-en:"suddenly",
-sen:"The machine stopped suddenly.（机器突然停止了。）"
+en:"suddenly（机器突然停止了。）",
+sen:"The machine stopped suddenly."
 },
 {
 cn:"这就是为什么",
-en:"That’s why",
-sen:"That’s why production was delayed.（这就是为什么生产延误。）"
+en:"That’s why（这就是为什么生产延误。）",
+sen:"That’s why production was delayed."
 },
 {
 cn:"然后",
-en:"and then",
-sen:"We checked the system, and then restarted it.（我们检查系统，然后重新启动。）"
+en:"and then（我们检查系统，然后重新启动。）",
+sen:"We checked the system, and then restarted it."
 },
 {
 cn:"到目前为止",
-en:"So far",
-sen:"So far, everything looks good.（到目前为止一切正常。）"
+en:"So far（到目前为止一切正常。）",
+sen:"So far, everything looks good."
 },
 {
 cn:"但是",
-en:"However",
-sen:"However, we still need to monitor it.（但是我们还需要监控。）"
+en:"However（但是我们还需要监控。）",
+sen:"However, we still need to monitor it."
 },
 {
 cn:"此外",
-en:"In addition",
-sen:"In addition, we will take preventive action.（此外，我们会采取预防措施。）"
+en:"In addition（此外，我们会采取预防措施。）",
+sen:"In addition, we will take preventive action."
 },
 {
 cn:"目前",
-en:"For now",
-sen:"For now, everything is under control.（目前一切都在控制中。）"
+en:"For now（目前一切都在控制中。）",
+sen:"For now, everything is under control."
 }
 ];
 
+// 初始化显示
 function show(){
     document.getElementById("cn").innerText = data[index].cn;
     document.getElementById("display").innerText = "";
     document.getElementById("page").innerText = (index+1)+" / "+data.length;
 }
 
+// 显示英文（单词）
 function showEN(){
     document.getElementById("display").innerText = data[index].en;
 }
 
+// 显示例句
 function showSen(){
     document.getElementById("display").innerText = data[index].sen;
 }
 
+// 单词发音
 function speakEN(){
     let msg = new SpeechSynthesisUtterance(data[index].en);
     msg.lang = "en-US";
     speechSynthesis.speak(msg);
 }
 
+// 句子发音
 function speakSen(){
     let msg = new SpeechSynthesisUtterance(data[index].sen);
     msg.lang = "en-US";
     speechSynthesis.speak(msg);
 }
 
-// ⭐ 显示全文
+// ⭐ 全文（显示完整句子）
 function showAll(){
     let text = "";
     data.forEach(item=>{
-        text += item.en + "\n";
+        text += item.sen + "\n\n";
     });
     document.getElementById("display").innerText = text;
 }
 
-// ⭐ 连续朗读
+// ⭐ 全文朗读（完整句子）
 function speakAll(){
     let i = 0;
 
     function speakNext(){
         if(i >= data.length) return;
 
-        let msg = new SpeechSynthesisUtterance(data[i].en);
+        let msg = new SpeechSynthesisUtterance(data[i].sen);
         msg.lang = "en-US";
 
         msg.onend = function(){
             i++;
-            setTimeout(speakNext, 400); // ⭐ 停顿
+            setTimeout(speakNext, 500);
         };
 
         speechSynthesis.speak(msg);
@@ -171,6 +172,7 @@ function speakAll(){
     speakNext();
 }
 
+// 下一个
 function next(){
     index = (index + 1) % data.length;
     show();
@@ -197,7 +199,6 @@ function next(){
 <button onclick="speakSen()">🔊</button>
 </div>
 
-<!-- ⭐ 新增按钮 -->
 <div class="full-buttons">
 <button onclick="showAll()">全文</button>
 <button onclick="speakAll()">🔊</button>
@@ -211,8 +212,8 @@ function next(){
 show();
 </script>
 
-<!-- 返回按钮 -->
-<div style="position: fixed; bottom: 20px; width: 100%; text-align: center;">
+<!-- 返回主页 -->
+<div style="position: fixed; bottom: 60px; width: 100%; text-align: center;">
 <a href="index.html">
 <button style="padding:12px 24px; border-radius:8px; background:#4CAF50; color:white;">
 ⬅ Index

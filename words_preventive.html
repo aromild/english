@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Prevent Family</title>
+
+<style>
+body {
+    font-family: Arial;
+    margin: 0;
+    background: #f2f2f2;
+    text-align: center;
+}
+
+.container {
+    padding: 20px;
+    max-width: 400px;
+    margin: auto;
+}
+
+.page-indicator {
+    background: #d9d9d9;
+    padding: 6px 0;
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+.card {
+    background: white;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+}
+
+button {
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    background: #007AFF;
+    color: white;
+    margin: 5px;
+}
+
+.hidden {
+    display: none;
+}
+</style>
+
+<script>
+function toggle(id){
+    let x = document.getElementById(id);
+    x.style.display = (x.style.display === "none") ? "block" : "none";
+}
+
+function speak(text){
+    let msg = new SpeechSynthesisUtterance(text);
+    msg.lang = "en-US";
+    msg.rate = 0.9;
+    speechSynthesis.speak(msg);
+}
+</script>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="page-indicator">
+Prevent Family Learning
+</div>
+
+<!-- prevent -->
+<div class="card">
+<h3>prevent（阻止）</h3>
+
+<button onclick="toggle('p1')">英文</button>
+<div id="p1" class="hidden">
+prevent <button onclick="speak('prevent')">🔊</button>
+</div>
+
+<button onclick="toggle('p2')">搭配</button>
+<div id="p2" class="hidden">
+prevent issues <button onclick="speak('prevent issues')">🔊</button><br>
+prevent failure <button onclick="speak('prevent failure')">🔊</button><br>
+prevent problems <button onclick="speak('prevent problems')">🔊</button>
+</div>
+
+<button onclick="toggle('p3')">例句</button>
+<div id="p3" class="hidden">
+We need to prevent this issue. <button onclick="speak('We need to prevent this issue')">🔊</button><br>
+我们需要防止这个问题。<br><br>
+
+We should take action to prevent failure. <button onclick="speak('We should take action to prevent failure')">🔊</button><br>
+我们应该采取措施防止故障。
+</div>
+</div>
+
+<!-- prevention -->
+<div class="card">
+<h3>prevention（预防）</h3>
+
+<button onclick="toggle('p4')">英文</button>
+<div id="p4" class="hidden">
+prevention <button onclick="speak('prevention')">🔊</button>
+</div>
+
+<button onclick="toggle('p5')">搭配</button>
+<div id="p5" class="hidden">
+prevention plan <button onclick="speak('prevention plan')">🔊</button><br>
+focus on prevention <button onclick="speak('focus on prevention')">🔊</button>
+</div>
+
+<button onclick="toggle('p6')">例句</button>
+<div id="p6" class="hidden">
+We need a prevention plan. <button onclick="speak('We need a prevention plan')">🔊</button><br>
+我们需要一个预防方案。<br><br>
+
+We should focus on prevention. <button onclick="speak('We should focus on prevention')">🔊</button><br>
+我们应该重视预防。
+</div>
+</div>
+
+<!-- preventive -->
+<div class="card">
+<h3>preventive（预防的）</h3>
+
+<button onclick="toggle('p7')">英文</button>
+<div id="p7" class="hidden">
+preventive <button onclick="speak('preventive')">🔊</button>
+</div>
+
+<button onclick="toggle('p8')">搭配</button>
+<div id="p8" class="hidden">
+preventive action <button onclick="speak('preventive action')">🔊</button><br>
+preventive maintenance <button onclick="speak('preventive maintenance')">🔊</button>
+</div>
+
+<button onclick="toggle('p9')">例句</button>
+<div id="p9" class="hidden">
+We need to take preventive action. <button onclick="speak('We need to take preventive action')">🔊</button><br>
+我们需要采取预防措施。<br><br>
+
+Preventive maintenance is very important. <button onclick="speak('Preventive maintenance is very important')">🔊</button><br>
+预防性维护非常重要。
+</div>
+</div>
+
+</div>
+
+<!-- 返回主页 -->
+<div style="position: fixed; bottom: 60px; width: 100%;">
+<a href="index.html">
+<button style="background:#4CAF50;">⬅ Index</button>
+</a>
+</div>
+
+<!-- 版权 -->
+<div style="text-align:center; font-size:12px; color:#888; margin:20px 0;">
+© 2026 Ken. All rights reserved.
+</div>
+
+</body>
+</html>

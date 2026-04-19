@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>English Practice - Daily Sentences</title>
+<title>English Practice</title>
 
 <style>
 body {
@@ -39,6 +39,7 @@ body {
     color: #007AFF;
     display: none;
     margin-bottom: 15px;
+    white-space: pre-line; /* 支持多行显示 */
 }
 button {
     width: 100%;
@@ -70,24 +71,23 @@ button {
     <button class="prev" onclick="prev()">上一句</button>
     <button class="next" onclick="next()">下一句</button>
     <button class="random" onclick="random()">随机一句</button>
+
+    <!-- ⭐新增按钮 -->
+    <button class="speak" onclick="playAll()">连读</button>
 </div>
 
 <script>
 const data = [
 {cn:"去机场对我来说很方便。",en:"It’s convenient for me to go to the airport."},
-
 {cn:"你能精确测量一下这个间隙吗？",en:"Can you take an accurate measurement of the clearance?"},
-
 {cn:"有效期已经过期了。",en:"The validity period has expired."},
-
 {cn:"它已经不再有效了。",en:"It’s no longer valid."},
-
 {cn:"截止日期已经过了。",en:"The expiration date has passed."},
-
 {cn:"我们按照之前决定的来执行吧。",en:"Let’s stick to what was decided before."}
 ];
 
 let index = 0;
+let audio = null;
 
 function update() {
     document.getElementById("cn").innerText = data[index].cn;
@@ -120,6 +120,27 @@ function prev() {
 function random() {
     index = Math.floor(Math.random() * data.length);
     update();
+}
+
+/* ⭐ 连读功能 */
+function playAll() {
+
+    // 显示所有英文句子
+    let allText = "";
+    data.forEach(item => {
+        allText += item.en + "\n";
+    });
+
+    document.getElementById("en").innerText = allText;
+    document.getElementById("en").style.display = "block";
+
+    // 播放 mp3（确保文件和html同目录）
+    if (audio) {
+        audio.pause();
+    }
+
+    audio = new Audio("convenient.mp3");
+    audio.play();
 }
 
 update();

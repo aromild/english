@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>English Practice - Daily Sentences</title>
+
+<style>
+body {
+    font-family: -apple-system;
+    background: #f2f4f7;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding-top: 40px;
+}
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 420px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+.progress {
+    text-align: center;
+    font-size: 0.9rem;
+    color: gray;
+    margin-bottom: 10px;
+}
+.cn {
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+}
+.en {
+    font-size: 1.2rem;
+    color: #007AFF;
+    display: none;
+    margin-bottom: 15px;
+}
+button {
+    width: 100%;
+    padding: 14px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: bold;
+}
+.show { background: #007AFF; color: white; }
+.speak { background: #34C759; color: white; }
+.next { background: #888; color: white; }
+.prev { background: #bbb; color: white; }
+.random { background: #ff9500; color: white; }
+</style>
+</head>
+
+<body style="padding-bottom:120px;">
+
+<div class="card">
+    <div class="progress" id="progress"></div>
+    <div class="cn" id="cn"></div>
+    <div class="en" id="en"></div>
+
+    <button class="show" onclick="showAnswer()">显示英文</button>
+    <button class="speak" onclick="speak()">听发音</button>
+
+    <button class="prev" onclick="prev()">上一句</button>
+    <button class="next" onclick="next()">下一句</button>
+    <button class="random" onclick="random()">随机一句</button>
+</div>
+
+<script>
+const data = [
+{cn:"去机场对我来说很方便。",en:"It’s convenient for me to go to the airport."},
+
+{cn:"你能精确测量一下这个间隙吗？",en:"Can you take an accurate measurement of the clearance?"},
+
+{cn:"有效期已经过期了。",en:"The validity period has expired."},
+
+{cn:"它已经不再有效了。",en:"It’s no longer valid."},
+
+{cn:"截止日期已经过了。",en:"The expiration date has passed."},
+
+{cn:"我们按照之前决定的来执行吧。",en:"Let’s stick to what was decided before."}
+];
+
+let index = 0;
+
+function update() {
+    document.getElementById("cn").innerText = data[index].cn;
+    document.getElementById("en").style.display = "none";
+    document.getElementById("progress").innerText = (index+1) + " / " + data.length;
+}
+
+function showAnswer() {
+    document.getElementById("en").innerText = data[index].en;
+    document.getElementById("en").style.display = "block";
+}
+
+function speak() {
+    let msg = new SpeechSynthesisUtterance(data[index].en);
+    msg.lang = "en-US";
+    msg.rate = 0.9;
+    speechSynthesis.speak(msg);
+}
+
+function next() {
+    index = (index + 1) % data.length;
+    update();
+}
+
+function prev() {
+    index = (index - 1 + data.length) % data.length;
+    update();
+}
+
+function random() {
+    index = Math.floor(Math.random() * data.length);
+    update();
+}
+
+update();
+</script>
+
+</body>
+</html>

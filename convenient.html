@@ -3,9 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>English Practice</title>
+<title>Ken英语脱口训练器</title>
+
+<link rel="apple-touch-icon" href="icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
 
 <style>
+
 body {
     font-family: -apple-system;
     background: #f2f4f7;
@@ -39,7 +44,7 @@ body {
     color: #007AFF;
     display: none;
     margin-bottom: 15px;
-    white-space: pre-line; /* 支持多行显示 */
+    white-space: pre-line; /* ⭐支持多行 */
 }
 button {
     width: 100%;
@@ -72,7 +77,7 @@ button {
     <button class="next" onclick="next()">下一句</button>
     <button class="random" onclick="random()">随机一句</button>
 
-    <!-- ⭐新增按钮 -->
+    <!-- ⭐新增 连读按钮 -->
     <button class="speak" onclick="playAll()">连读</button>
 </div>
 
@@ -125,7 +130,7 @@ function random() {
 /* ⭐ 连读功能 */
 function playAll() {
 
-    // 显示所有英文句子
+    // 显示全部英文
     let allText = "";
     data.forEach(item => {
         allText += item.en + "\n";
@@ -134,7 +139,7 @@ function playAll() {
     document.getElementById("en").innerText = allText;
     document.getElementById("en").style.display = "block";
 
-    // 播放 mp3（确保文件和html同目录）
+    // 播放 mp3
     if (audio) {
         audio.pause();
     }
@@ -145,6 +150,43 @@ function playAll() {
 
 update();
 </script>
+
+<!-- ✅ 保留原版权 -->
+<div style="
+  position: fixed;
+  bottom: 70px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  font-size: 12px;
+  color: #888;
+">
+  © 2026 Ken. All rights reserved.
+</div>
+
+<!-- ✅ 保留 Index 按钮 -->
+<div style="
+  position: fixed;
+  bottom: 20px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+">
+  <a href="index.html" style="text-decoration:none;">
+    <button style="
+      padding:12px 24px;
+      font-size:16px;
+      border:none;
+      border-radius:8px;
+      background-color:#4CAF50;
+      color:white;
+      white-space: nowrap;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    ">
+      ⬅ Index
+    </button>
+  </a>
+</div>
 
 </body>
 </html>
